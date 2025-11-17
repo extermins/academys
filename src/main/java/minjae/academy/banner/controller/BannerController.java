@@ -5,6 +5,7 @@ import minjae.academy.banner.dto.BannerCreateDto;
 import minjae.academy.banner.dto.BannerOrderDto;
 import minjae.academy.banner.entity.Banner;
 import minjae.academy.banner.service.BannerService;
+import minjae.academy.braedcrumb.Breadcrumb;
 import minjae.academy.file.service.BannerFileService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,16 +24,19 @@ import java.util.UUID;
 public class BannerController {
     private final BannerService bannerService;
     private final BannerFileService bannerFileService;
+    private final Breadcrumb breadcrumb;
 
     @GetMapping
     public String Banner(Model model) {
+        breadcrumb.addBreadcrumb(model,"banner","배너");
         List<Banner> banners = bannerService.allBanners();
         model.addAttribute("banners", banners);
         return "admin/banner/banner";
     }
 
     @GetMapping("/create")
-    public String Create(@ModelAttribute BannerCreateDto bannerCreateDto){
+    public String Create(@ModelAttribute BannerCreateDto bannerCreateDto,Model model) {
+        breadcrumb.addBreadcrumb(model,"banner","배너");
         return "admin/banner/create";
     }
 

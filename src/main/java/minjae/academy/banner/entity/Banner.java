@@ -3,8 +3,7 @@ package minjae.academy.banner.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import minjae.academy.config.JpaAuditing.BaseEntity;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -35,17 +34,17 @@ public class Banner extends BaseEntity {
     private Integer displayOrder;
 
     @Column
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
     @Column
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     public boolean isDisplayable() {
         if (!enabled) {
             return false;
         }
 
-        LocalDateTime now = LocalDateTime.now();
+        LocalDate now = LocalDate.now();
         boolean afterStart = (startDate == null) || !now.isBefore(startDate);
         boolean beforeEnd = (endDate == null) || !now.isAfter(endDate);
 
@@ -53,10 +52,10 @@ public class Banner extends BaseEntity {
     }
 
     public boolean isScheduled() {
-        return startDate != null && LocalDateTime.now().isBefore(startDate);
+        return startDate != null && LocalDate.now().isBefore(startDate);
     }
 
     public boolean isExpired() {
-        return endDate != null && LocalDateTime.now().isAfter(endDate);
+        return endDate != null && LocalDate.now().isAfter(endDate);
     }
 }

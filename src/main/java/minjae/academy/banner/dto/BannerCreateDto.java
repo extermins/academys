@@ -8,6 +8,7 @@ import lombok.Setter;
 import minjae.academy.banner.entity.Banner;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -36,9 +37,9 @@ public class BannerCreateDto {
 //    @Max(value = 100, message = "표시 순서는 100 이하여야 합니다.")
 //    private Integer displayOrder;
 
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    private LocalDateTime endDate;
+    private LocalDate endDate;
 
     public Banner toBanner() {
         return Banner.builder()
