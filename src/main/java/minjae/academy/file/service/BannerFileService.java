@@ -55,4 +55,19 @@ public class BannerFileService {
 
     }
 
+    public void deleteBannerImage(String filename) {
+        String bannerPath = uploadDirectory + "/banner";
+        try {
+            Path filePath = Paths.get(bannerPath,"/", filename);
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+                System.out.println("기존 이미지 삭제 완료: " + filename);
+            }
+        } catch (IOException e) {
+            System.err.println("이미지 삭제 실패: " + filename);
+            e.printStackTrace();
+            // 삭제 실패해도 업데이트는 진행
+        }
+    }
+
 }

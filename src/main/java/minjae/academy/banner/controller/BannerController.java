@@ -3,6 +3,7 @@ package minjae.academy.banner.controller;
 import lombok.RequiredArgsConstructor;
 import minjae.academy.banner.dto.BannerCreateDto;
 import minjae.academy.banner.dto.BannerOrderDto;
+import minjae.academy.banner.dto.BannerUpdateDto;
 import minjae.academy.banner.entity.Banner;
 import minjae.academy.banner.service.BannerService;
 import minjae.academy.braedcrumb.Breadcrumb;
@@ -13,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,8 +62,51 @@ public class BannerController {
         return "/admin/banner/create";
     }
 
-//    @GetMapping
-//    public String edit(@RequestParam("uuid") UUID id){
-//       return "admin/banner/edit";
-//    }
+    @GetMapping("/edit")
+    public String edit(@RequestParam String uuid,Model model,@ModelAttribute BannerUpdateDto bannerUpdateDto) {
+        Banner banner = bannerService.getOneBanner(uuid);
+        BannerUpdateDto dto = BannerUpdateDto.builder()
+                .uuid(banner.getUuid())
+                .description(banner.getDescription())
+                .linkUrl(banner.getLinkUrl())
+                .imageUrl(banner.getImageUrl())
+                .enabled(banner.isEnabled())
+                .startDate(banner.getStartDate())
+                .endDate(banner.getEndDate())
+                .build();
+        model.addAttribute("bannerUpdateDto",dto);
+        return "admin/banner/edit";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute BannerUpdateDto bannerUpdateDto,
+                         BindingResult bindingResult,
+                         @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+                         RedirectAttributes redirectAttributes) throws IOException {
+
+        if(bindingResult.hasErrors()){
+            return "admin/banner/edit";
+        }
+
+        // 새 이미지가 업로드된 경우에만 처리
+        if(imageFile != null && !imageFile.isEmpty()){
+            // 새 이미지 저장
+            String newImageUrl = bannerFileService.saveBannerImage(imageFile);
+
+            // 기존 이미지 삭제 (선택사항)
+            if(bannerUpdateDto.getImageUrl() != null && !bannerUpdateDto.getImageUrl().isEmpty()) {
+                bannerFileService.deleteBannerImage(bannerUpdateDto.getImageUrl());
+            }
+
+            // 새 이미지 URL 설정
+            bannerUpdateDto.setImageUrl(newImageUrl);
+        }
+        // imageFile이 비어있으면 DTO의 기존 imageUrl 값을 그대로 유지
+
+        // 배너 업데이트
+        bannerService.updateBanner(bannerUpdateDto);
+
+        redirectAttributes.addFlashAttribute("message", "배너가 성공적으로 수정되었습니다.");
+        return "redirect:/admin/banner";
+    }
 }
