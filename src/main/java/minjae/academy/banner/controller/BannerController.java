@@ -88,20 +88,26 @@ public class BannerController {
             return "admin/banner/edit";
         }
 
-        // 새 이미지가 업로드된 경우에만 처리
+        // 기존 배너 정보 조회 (기존 이미지 파일명을 가져오기 위해)
+        Banner existingBanner = bannerService.getOneBanner(bannerUpdateDto.getUuid());
+        String oldImageUrl = existingBanner.getImageUrl();
+
+        // 새 이미지가 업로드된 경우
         if(imageFile != null && !imageFile.isEmpty()){
             // 새 이미지 저장
             String newImageUrl = bannerFileService.saveBannerImage(imageFile);
 
-            // 기존 이미지 삭제 (선택사항)
-            if(bannerUpdateDto.getImageUrl() != null && !bannerUpdateDto.getImageUrl().isEmpty()) {
-                bannerFileService.deleteBannerImage(bannerUpdateDto.getImageUrl());
+            // 기존 이미지 삭제
+            if(oldImageUrl != null && !oldImageUrl.isEmpty()) {
+                bannerFileService.deleteBannerImage(oldImageUrl);
             }
 
             // 새 이미지 URL 설정
             bannerUpdateDto.setImageUrl(newImageUrl);
+        } else {
+            // 이미지가 업로드되지 않은 경우 기존 이미지 URL 유지
+            bannerUpdateDto.setImageUrl(oldImageUrl);
         }
-        // imageFile이 비어있으면 DTO의 기존 imageUrl 값을 그대로 유지
 
         // 배너 업데이트
         bannerService.updateBanner(bannerUpdateDto);

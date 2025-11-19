@@ -58,9 +58,10 @@ public class BannerFileService {
     public void deleteBannerImage(String filename) {
         String bannerPath = uploadDirectory + "/banner";
         try {
-            Path filePath = Paths.get(bannerPath,"/", filename);
+            Path filePath = Paths.get(bannerPath, filename);
             if (Files.exists(filePath)) {
                 Files.delete(filePath);
+                System.out.println("경로 : " +filePath.toString());
                 System.out.println("기존 이미지 삭제 완료: " + filename);
             }
         } catch (IOException e) {
