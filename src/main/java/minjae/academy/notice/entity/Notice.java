@@ -9,6 +9,7 @@ import minjae.academy.config.JpaAuditing.BaseEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Setter
 public class Notice extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

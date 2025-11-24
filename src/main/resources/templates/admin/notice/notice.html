@@ -36,13 +36,15 @@
                             </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-800/50">
-                            <tr th:each="notice : ${notices}">
-                                <td th:text="${notice.uuid}" class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6 dark:text-white"></td>
-                                <td th:text="${notice.title}"  class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400"></td>
+                            <tr th:each="notice, iterStat: ${notices}">
+                                <td th:text="${iterStat.count}" class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6 dark:text-white"></td>
+                                <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                                    <a th:text="${notice.title}" th:href="@{/admin/notice/{uuid}(uuid=${notice.uuid})}"></a>
+                                </td>
                                 <td th:text="${notice.createdBy}" class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400"></td>
                                 <td th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm:ss')}"  class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400"></td>
                                 <td class="py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-6">
-                                    <a th:href="@{/admin/notice/edit(uuid=${notice.uuid})}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">Edit</a>
+                                    <a  class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300">Edit</a>
                                 </td>
                             </tr>
                             </tbody>

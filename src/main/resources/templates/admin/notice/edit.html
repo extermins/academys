@@ -8,22 +8,51 @@
 
 
 <main class="p-12">
-    <h2 th:text="${notice.title}"></h2>
 
-    <div id="viewer"></div>
 
+    <form th:action="@{/admin/notice/edit(uuid=${uuid})}"  id="form" method="post" th:object="${noticeUpdateDto}">
+        <div class="md:flex md:items-center md:justify-between mb-5">
+            <div class="min-w-0 flex-1">
+                <h2 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-white">공지사항 등록</h2>
+            </div>
+            <div class="mt-4 flex md:mt-0 md:ml-4">
+                <button type="button" th:onclick="|location.href='@{/admin/notice}'|"  class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">취소</button>
+                <button type="submit" class="ml-3 inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-400">등록</button>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <div class="mt-2">
+                <input id="email" type="text" th:field="*{title}" placeholder="제목"
+                       class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1
+                       outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600
+                       sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500
+                       dark:focus:outline-indigo-500"/>
+            </div>
+        </div>
+
+        <div id="content"></div>
+        <input type="hidden" th:field="*{content}" name="content" id="content-hidden">
+    </form>
 
 </main>
-<script src="https://uicdn.toast.com/editor/3.0.2/toastui-editor-all.min.js"></script>
-<script>
-    const a = `[[${notice.content}]]`;
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script th:inline="javascript">
+    const a = /*[[${noticeUpdateDto.content}]]*/ '';
 
-    const viewer = new toastui.Editor.factory({
-        el: document.getElementById('viewer'),
-        viewer: true,
-        initialValue: a
+
+    const editor = new toastui.Editor({
+        el: document.querySelector('#content'), // 에디터를 적용할 요소 (컨테이너)
+        height: '500px',                        // 에디터 영역의 높이 값 (OOOpx || auto)
+        initialEditType: 'wysiwyg',            // 최초로 보여줄 에디터 타입 (markdown || wysiwyg)
+        initialValue: a,     // 내용의 초기 값으로, 반드시 마크다운 문자열 형태여야 함
+        previewStyle: 'vertical'                // 마크다운 프리뷰 스타일 (tab || vertical)
+    });
+
+    document.querySelector('#form').addEventListener('submit', () => {
+        const md = editor.getMarkdown();
+        document.querySelector('#content-hidden').value = md;
     });
 </script>
-
 </body>
 </html>
