@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin/layout/layout}"
+      layout:fragment="content">
+<body>
+
+
+<main class="p-12">
+    <h2 th:text="${notice.title}"></h2>
+
+    <div id="viewer"></div>
+
+
+</main>
+<script src="https://uicdn.toast.com/editor/3.0.2/toastui-editor-all.min.js"></script>
+<script>
+    const a = `[[${notice.content}]]`;
+
+    const viewer = new toastui.Editor.factory({
+        el: document.getElementById('viewer'),
+        viewer: true,
+        initialValue: a
+    });
+</script>
+
+</body>
+</html>
