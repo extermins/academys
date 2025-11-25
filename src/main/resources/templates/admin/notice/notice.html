@@ -6,51 +6,64 @@
       layout:fragment="content">
 <body>
 
-<main>
-    <div class="px-4 sm:px-6 lg:px-8">
-        <div class="sm:flex sm:items-center">
-            <div class="sm:flex-auto">
-                <h1 class="text-base font-semibold text-gray-900 dark:text-white">Users</h1>
-                <p class="mt-2 text-sm text-gray-700 dark:text-gray-300">A list of all the users in your account including their name, title, email and role.</p>
-            </div>
-            <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-                <button type="button" th:onclick="|location.href='@{/admin/notice/create}'|" class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">등록</button>
-            </div>
+<main class="p-12">
+    <div class="md:flex md:items-center md:justify-between">
+        <div class="min-w-0 flex-1">
+            <h2 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-white">
+                공지사항</h2>
         </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4">
+            <button type="button" th:onclick="|location.href='@{/admin/notice/create}'|"
+                    class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">
+                등록
+            </button>
+        </div>
+    </div>
 
-
-        <div class="mt-8 flow-root">
-            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                    <div class="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
-                        <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
-                            <thead class="bg-gray-50 dark:bg-gray-800/75">
-                            <tr>
-                                <th scope="col" class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6 dark:text-gray-200">순번</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">제목</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">작성자</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">작성일자</th>
-
-                            </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-800/50">
-                            <tr th:each="notice, iterStat: ${notices}">
-                                <td th:text="${iterStat.count}" class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6 dark:text-white"></td>
-                                <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
-                                    <a th:text="${notice.title}" th:href="@{/admin/notice/{uuid}(uuid=${notice.uuid})}" class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"></a>
-                                </td>
-                                <td th:text="${notice.createdBy}" class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400"></td>
-                                <td th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm:ss')}"  class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400"></td>
-
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+    <div class="mt-8 flow-root">
+        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                <div class="overflow-hidden shadow-sm outline-1 outline-black/5 sm:rounded-lg dark:shadow-none dark:-outline-offset-1 dark:outline-white/10">
+                    <table class="relative min-w-full divide-y divide-gray-300 dark:divide-white/15">
+                        <thead class="bg-gray-50 dark:bg-gray-800/75">
+                        <tr>
+                            <th scope="col"
+                                class="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-6 dark:text-gray-200">
+                                순번
+                            </th>
+                            <th scope="col"
+                                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
+                                제목
+                            </th>
+                            <th scope="col"
+                                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
+                                작성자
+                            </th>
+                            <th scope="col"
+                                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 dark:text-gray-200">
+                                작성일자
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-white dark:divide-white/10 dark:bg-gray-800/50">
+                        <tr th:each="notice, iterStat: ${notices}">
+                            <td th:text="${iterStat.count}"
+                                class="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-6 dark:text-white"></td>
+                            <td class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400">
+                                <a th:text="${notice.title}" th:href="@{/admin/notice/{uuid}(uuid=${notice.uuid})}"
+                                   class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300"></a>
+                            </td>
+                            <td th:text="${notice.createdBy}"
+                                class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400"></td>
+                            <td th:text="${#temporals.format(notice.createdAt, 'yyyy-MM-dd HH:mm:ss')}"
+                                class="px-3 py-4 text-sm whitespace-nowrap text-gray-500 dark:text-gray-400"></td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
-
 </main>
 
 </body>
