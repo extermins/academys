@@ -5,6 +5,7 @@ import minjae.academy.braedcrumb.Breadcrumb;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -17,5 +18,17 @@ public class VideoController {
     public String video(Model model) {
         breadcrumb.addBreadcrumb(model,"video","동영상");
         return "admin/video/video";
+    }
+
+    @GetMapping("/create")
+    public String create(Model model) {
+        breadcrumb.addBreadcrumb(model,"video","동영상");
+        return "admin/video/create";
+    }
+
+    @PostMapping("/create")
+    public String create(){
+
+        return "redirect:admin/video";
     }
 }

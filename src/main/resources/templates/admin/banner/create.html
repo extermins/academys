@@ -7,99 +7,15 @@
 <body>
 
 <main class="p-12">
-<!--    <form method="post" th:type="multipart/form-data" th:object="${bannerDto}">-->
-<!--        <div class="space-y-12">-->
-<!--            <div class="border-b border-gray-900/10 pb-12 dark:border-white/10">-->
-<!--                <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">-->
-<!--                    <div class="col-span-6">-->
-<!--                        <label for="street-address" class="block text-sm/6 font-medium text-gray-900 dark:text-white">url</label>-->
-<!--                        <div class="mt-2">-->
-<!--                            <input id="street-address" type="text" name="url" autocomplete="url" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500" />-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="col-span-full">-->
-<!--                        <label for="about" class="block text-sm/6 font-medium text-gray-900 dark:text-white">description</label>-->
-<!--                        <div class="mt-2">-->
-<!--                            <textarea id="about" name="about" rows="3" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-indigo-500"></textarea>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="sm:col-span-2">-->
-<!--                        <label for="s" class="block text-sm/6 font-medium text-gray-900 dark:text-white">Last name</label>-->
-<!--                        <div class="mt-2">-->
-<!--                            <input type="datetime-local" id="s" name="datetime"-->
-<!--                                   class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1-->
-<!--                                   -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2-->
-<!--                                   focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10-->
-<!--                                   dark:placeholder:text-gray-500 dark:focus:outline-indigo-500">-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="sm:col-span-2">-->
-<!--                        <label for="last-name" class="block text-sm/6 font-medium text-gray-900 dark:text-white">s</label>-->
-<!--                        <div class="mt-2">-->
-<!--                            <input type="datetime-local" id="datetime" name="datetime"-->
-<!--                                   class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1-->
-<!--                                   -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2-->
-<!--                                   focus:outline-indigo-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10-->
-<!--                                   dark:placeholder:text-gray-500 dark:focus:outline-indigo-500">-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-<!--                    <div class="sm:col-span-2">-->
-<!--                        <label for="last-name" class="block text-sm/6 font-medium text-gray-900 dark:text-white">Last name</label>-->
-<!--                        <div class="mt-2 py-1.5">-->
-<!--                            <div class="group relative inline-flex w-11 shrink-0 rounded-full bg-gray-200 p-0.5-->
-<!--                                        inset-ring inset-ring-gray-900/5 outline-offset-2 outline-indigo-600 transition-colors-->
-<!--                                        duration-200 ease-in-out has-checked:bg-indigo-600 has-focus-visible:outline-2 dark:bg-white/5-->
-<!--                                        dark:inset-ring-white/10 dark:outline-indigo-500 dark:has-checked:bg-indigo-500">-->
-<!--                                <span class="size-5 rounded-full bg-white shadow-xs ring-1 ring-gray-900/5 transition-transform duration-200 ease-in-out group-has-checked:translate-x-5"></span>-->
-<!--                                <input type="checkbox" name="setting" aria-label="Use setting" class="absolute inset-0 appearance-none focus:outline-hidden" />-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-
-
-<!--                    <div class="col-span-full">-->
-<!--                        <label for="cover-photo" class="block text-sm/6 font-medium text-gray-900 dark:text-white">Cover photo</label>-->
-<!--                        <div id="drop-zone" class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-white/25 transition-colors">-->
-<!--                            <div class="text-center">-->
-<!--                                &lt;!&ndash; 기본 상태 (이미지 없을 때) &ndash;&gt;-->
-<!--                                <div id="upload-prompt">-->
-<!--                                    <svg viewBox="0 0 24 24" fill="currentColor" data-slot="icon" aria-hidden="true" class="mx-auto size-12 text-gray-300 dark:text-gray-600">-->
-<!--                                        <path d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clip-rule="evenodd" fill-rule="evenodd" />-->
-<!--                                    </svg>-->
-<!--                                    <div class="mt-4 flex text-sm/6 text-gray-600 dark:text-gray-400">-->
-<!--                                        <label for="file-upload" class="relative cursor-pointer rounded-md bg-transparent font-semibold text-indigo-600 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:focus-within:outline-indigo-500 dark:hover:text-indigo-300">-->
-<!--                                            <span>Upload a file</span>-->
-<!--                                            <input id="file-upload" type="file" accept="image/png,image/jpeg,image/gif" class="sr-only" />-->
-<!--                                        </label>-->
-<!--                                        <p class="pl-1">or drag and drop</p>-->
-<!--                                    </div>-->
-<!--                                    <p class="text-xs/5 text-gray-600 dark:text-gray-400">PNG, JPG, GIF up to 10MB</p>-->
-<!--                                </div>-->
-
-<!--                                &lt;!&ndash; 이미지 미리보기 (이미지 업로드 후) &ndash;&gt;-->
-<!--                                <div id="image-preview" class="hidden">-->
-<!--                                    <img id="preview-img" src="" alt="Preview" class="max-h-64 mx-auto rounded-lg" />-->
-<!--                                    <button type="button" id="remove-image" class="mt-4 text-sm font-semibold text-red-600 hover:text-red-500 dark:text-red-400 dark:hover:text-red-300">-->
-<!--                                        Remove image-->
-<!--                                    </button>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+    <div class="md:flex md:items-center md:justify-between mb-5 border-b border-gray-900/10 pb-5 dark:border-white/10">
+        <div class="min-w-0 flex-1">
+            <h2 class="text-2xl/7 font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight dark:text-white">배너 등록</h2>
+        </div>
+<!--        <div class="mt-4 flex md:mt-0 md:ml-4">-->
+<!--            <button type="button" th:onclick="|location.href='@{/admin/notice}'|"  class="inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs inset-ring inset-ring-gray-300 hover:bg-gray-50 dark:bg-white/10 dark:text-white dark:shadow-none dark:inset-ring-white/5 dark:hover:bg-white/20">취소</button>-->
+<!--            <button type="submit" class="ml-3 inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-400">등록</button>-->
 <!--        </div>-->
-
-<!--        <div class="mt-6 flex items-center justify-end gap-x-6">-->
-<!--            <button type="button" class="text-sm/6 font-semibold text-gray-900 dark:text-white">Cancel</button>-->
-<!--            <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:shadow-none dark:focus-visible:outline-indigo-500">Save</button>-->
-<!--        </div>-->
-<!--    </form>-->
-
+    </div>
 
     <form method="post" th:action="@{/admin/banner/create}" enctype="multipart/form-data" th:object="${bannerCreateDto}">
         <div class="space-y-12">

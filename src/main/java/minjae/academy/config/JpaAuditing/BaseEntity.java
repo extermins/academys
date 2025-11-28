@@ -1,7 +1,6 @@
 package minjae.academy.config.JpaAuditing;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Data;
@@ -38,7 +37,7 @@ public class BaseEntity {
     @Column(name = "deletedBy", length = 36 )
     private String deletedBy;
     @Column(name = "deleted")
-    private Boolean deleted;
+    private Boolean deleted = false;
     @Column(name = "deletedAt")
     private LocalDateTime deletedAt;
 
