@@ -1,105 +1,111 @@
 package minjae.academy.video.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import minjae.academy.config.JpaAuditing.BaseEntity;
 import minjae.academy.enums.VideoStatus;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
-@Builder
+@Table(name = "videos")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Video extends BaseEntity {
+@Builder
+public class Video {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String uuid;
-
-    // === 기본 정보 ===
-    @Column(nullable = false, length = 200)
-    private String title;  // 동영상 제목
-
-    @Column(columnDefinition = "TEXT")
-    private String description;  // 동영상 설명
-
-    // === 파일 정보 ===
-    @Column(nullable = false)
-    private String originalFileName;  // 원본 파일명 (사용자가 업로드한 이름)
-
-    @Column(nullable = false, unique = true)
-    private String storedFileName;  // 저장 파일명 (UUID 등으로 변환된 이름)
+    private String id;
 
     @Column(nullable = false)
-    private String filePath;  // 저장 경로
+    private String originalFilename;
 
     @Column(nullable = false)
-    private Long fileSize;  // 파일 크기 (bytes)
+    private String storedFilename;
 
-    @Column(length = 50)
-    private String mimeType;  // MIME 타입 (video/mp4, video/webm 등)
+    @Column
+    private String thumbnailFilename;
 
-    @Column(length = 20)
-    private String fileExtension;  // 확장자 (.mp4, .avi 등)
+    @Column
+    private String thumbnailType;  // AUTO: 자동생성, MANUAL: 수동업로드
 
-    // === 동영상 메타데이터 ===
-    private Integer duration;  // 재생 시간 (초 단위)
+    @Column
+    private String convertedFilename;
 
-    private Integer width;  // 가로 해상도
+    @Column(nullable = false)
+    private String filePath;
 
-    private Integer height;  // 세로 해상도
+    @Column
+    private Long fileSize;
 
-    private Integer bitrate;  // 비트레이트 (kbps)
+    @Column
+    private Double duration;
 
-    private String codec;  // 코덱 정보 (H.264, VP9 등)
+    @Column
+    private Integer width;
 
-    // === 썸네일 ===
-    private String thumbnailPath;  // 썸네일 이미지 경로
+    @Column
+    private Integer height;
 
-    // === 상태 관리 ===
+    @Column
+    private String codec;
+
+    @Column
+    private Long bitrate;
+
+    @Column
+    private String contentType;
+
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(nullable = false)
     @Builder.Default
-    private VideoStatus status = VideoStatus.UPLOADED;  // 업로드 상태
+    private VideoStatus status = VideoStatus.UPLOADED;
 
-    @Builder.Default
-    private Long viewCount = 0L;  // 조회수
+    @Column
+    private String errorMessage;
 
-    @Builder.Default
-    private Boolean isPublic = true;  // 공개 여부
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
 
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "category_id")
-    // private Category category;
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
-    // === 편의 메서드 ===
-    public void increaseViewCount() {
-        this.viewCount++;
+    public enum VideoStatus {
+        UPLOADED,           // 업로드 완료
+        PROCESSING,         // 처리 중
+        THUMBNAIL_CREATED,  // 썸네일 생성 완료
+        CONVERTED,          // 변환 완료
+        COMPLETED,          // 모든 처리 완료
+        ERROR               // 오류 발생
     }
 
+    // 포맷된 재생시간 반환
     public String getFormattedDuration() {
-        if (duration == null) return "00:00";
-        int hours = duration / 3600;
-        int minutes = (duration % 3600) / 60;
-        int seconds = duration % 60;
-
-        if (hours > 0) {
-            return String.format("%d:%02d:%02d", hours, minutes, seconds);
-        }
-        return String.format("%02d:%02d", minutes, seconds);
+        if (duration == null) return "00:00:00";
+        int hours = (int) (duration / 3600);
+        int minutes = (int) ((duration % 3600) / 60);
+        int seconds = (int) (duration % 60);
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
+    // 해상도 문자열 반환
+    public String getResolution() {
+        if (width == null || height == null) return "Unknown";
+        return width + "x" + height;
+    }
+
+    // 파일 크기 포맷
     public String getFormattedFileSize() {
-        if (fileSize == null) return "0 B";
-
-        double size = fileSize;
-        String[] units = {"B", "KB", "MB", "GB"};
-        int unitIndex = 0;
-
-        while (size >= 1024 && unitIndex < units.length - 1) {
-            size /= 1024;
-            unitIndex++;
-        }
-        return String.format("%.1f %s", size, units[unitIndex]);
+        if (fileSize == null) return "Unknown";
+        if (fileSize < 1024) return fileSize + " B";
+        if (fileSize < 1024 * 1024) return String.format("%.2f KB", fileSize / 1024.0);
+        if (fileSize < 1024 * 1024 * 1024) return String.format("%.2f MB", fileSize / (1024.0 * 1024));
+        return String.format("%.2f GB", fileSize / (1024.0 * 1024 * 1024));
     }
 }

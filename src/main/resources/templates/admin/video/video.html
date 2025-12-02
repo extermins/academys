@@ -13,13 +13,109 @@
                 동영상</h2>
         </div>
         <div class="mt-4 flex md:mt-0 md:ml-4">
-            <button type="button" th:onclick="|location.href='@{/admin/video/create}'|"
-                    class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">
+            <!-- 수정: a 태그로 변경 -->
+            <a th:href="@{/admin/video/create}"
+               class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:bg-indigo-500 dark:hover:bg-indigo-400 dark:focus-visible:outline-indigo-500">
                 등록
-            </button>
+            </a>
         </div>
     </div>
+
+    <!-- 구분선 -->
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-900">비디오 목록</h1>
+        <p class="text-gray-600 mt-1">업로드된 비디오 파일을 관리합니다.</p>
+    </div>
+
+    <!-- Empty State -->
+    <div th:if="${#lists.isEmpty(videos)}" class="text-center py-12 bg-white rounded-lg shadow">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">비디오가 없습니다</h3>
+        <p class="mt-1 text-sm text-gray-500">새 비디오를 업로드해보세요.</p>
+        <div class="mt-6">
+            <a th:href="@{/admin/video/create}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                </svg>
+                비디오 업로드
+            </a>
+        </div>
+    </div>
+
+    <!-- Video Grid -->
+    <div th:unless="${#lists.isEmpty(videos)}" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <a th:each="video : ${videos}"
+           th:href="@{/admin/video/{id}(id=${video.id})}"
+           class="video-card bg-white rounded-lg shadow overflow-hidden transition-all duration-200 cursor-pointer block hover:shadow-lg">
+
+            <!-- Thumbnail -->
+            <div class="aspect-video bg-gray-200 relative">
+                <img th:if="${video.thumbnailFilename}"
+                     th:src="@{'/uploads/video/thumbnails/' + ${video.thumbnailFilename}}"
+                     class="w-full h-full object-cover"
+                     alt="thumbnail">
+                <div th:unless="${video.thumbnailFilename}"
+                     class="w-full h-full flex items-center justify-center bg-gray-300">
+                    <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+
+                <!-- Duration Badge -->
+                <div th:if="${video.duration}"
+                     class="absolute bottom-2 right-2 bg-black bg-opacity-75 text-white text-xs px-2 py-1 rounded">
+                    <span th:text="${video.formattedDuration}">00:00:00</span>
+                </div>
+
+                <!-- Status Badge -->
+                <div class="absolute top-2 left-2">
+                    <span th:switch="${video.status.name()}">
+                        <span th:case="'COMPLETED'" class="bg-green-500 text-white text-xs px-2 py-1 rounded">완료</span>
+                        <span th:case="'PROCESSING'" class="bg-yellow-500 text-white text-xs px-2 py-1 rounded">처리중</span>
+                        <span th:case="'ERROR'" class="bg-red-500 text-white text-xs px-2 py-1 rounded">오류</span>
+                        <span th:case="*" class="bg-gray-500 text-white text-xs px-2 py-1 rounded"
+                              th:text="${video.status}">상태</span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Info -->
+            <div class="p-4">
+                <h3 class="font-medium text-gray-900 truncate" th:title="${video.originalFilename}">
+                    <span th:text="${video.originalFilename}">filename.mp4</span>
+                </h3>
+                <div class="mt-2 flex items-center justify-between text-sm text-gray-500">
+                    <span th:text="${video.formattedFileSize}">0 MB</span>
+                    <span th:if="${video.width}" th:text="${video.resolution}">1920x1080</span>
+                </div>
+                <div class="mt-1 text-xs text-gray-400">
+                    <span th:text="${#temporals.format(video.createdAt, 'yyyy-MM-dd HH:mm')}">2024-01-01</span>
+                </div>
+            </div>
+        </a>
+    </div>
+
 </main>
+
+<div id="toast" class="fixed bottom-4 right-4 hidden">
+    <div class="bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg">
+        <span id="toast-message"></span>
+    </div>
+</div>
+
+<script>
+    function showToast(message, type = 'info') {
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        toastMessage.textContent = message;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 3000);
+    }
+</script>
 
 </body>
 </html>

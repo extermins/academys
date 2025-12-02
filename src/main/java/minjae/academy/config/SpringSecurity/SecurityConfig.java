@@ -18,6 +18,7 @@ public class SecurityConfig {
                         .requestMatchers("/", "/login", "/signup", "/logout","/error").permitAll()
                         .requestMatchers("/css/**","/js/**", "/images/**","/uploads/**").permitAll()
                         .requestMatchers( "/admin/**").permitAll()
+                        .requestMatchers( "/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login

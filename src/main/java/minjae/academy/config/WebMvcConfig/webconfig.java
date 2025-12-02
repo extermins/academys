@@ -16,6 +16,8 @@ public class webconfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploads/banners/**")
                 .addResourceLocations("file:" + directory + "/banner/");
 
+        registry.addResourceHandler("/uploads/video/**")
+                .addResourceLocations("file:" + directory + "/video/");
         // 또는 절대 경로로 직접 지정
         // registry.addResourceHandler("/uploads/**")
         //         .addResourceLocations("file:///C:/uploads/");
