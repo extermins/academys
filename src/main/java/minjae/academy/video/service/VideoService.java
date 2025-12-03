@@ -287,6 +287,23 @@ public class VideoService {
     }
 
     /**
+     * 비디오 목록 조회 (페이지네이션)
+     */
+    @Transactional(readOnly = true)
+    public org.springframework.data.domain.Page<Video> getVideos(org.springframework.data.domain.Pageable pageable) {
+        return videoRepository.findAllByOrderByCreatedAtDesc(pageable);
+    }
+
+    /**
+     * 비디오 검색 (페이지네이션)
+     */
+    @Transactional(readOnly = true)
+    public org.springframework.data.domain.Page<Video> searchVideos(String keyword, Video.VideoStatus status,
+                                                                     org.springframework.data.domain.Pageable pageable) {
+        return videoRepository.searchVideos(keyword, status, pageable);
+    }
+
+    /**
      * 비디오 상세 조회
      */
     @Transactional(readOnly = true)

@@ -24,7 +24,62 @@
     <!-- 구분선 -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-900">비디오 목록</h1>
-        <p class="text-gray-600 mt-1">업로드된 비디오 파일을 관리합니다.</p>
+        <p class="text-gray-600 mt-1">업로드된 비디오 파일을 관리합니다.
+            <span th:if="${totalElements != null}" class="text-sm text-gray-500">
+                (총 <span th:text="${totalElements}">0</span>개)
+            </span>
+        </p>
+    </div>
+
+    <!-- 검색 폼 -->
+    <div class="mb-6 bg-white rounded-lg shadow p-4">
+        <form th:action="@{/admin/video}" method="get" class="flex flex-wrap gap-4 items-end">
+            <!-- 키워드 검색 -->
+            <div class="flex-1 min-w-[200px]">
+                <label for="keyword" class="block text-sm font-medium text-gray-700 mb-1">파일명 검색</label>
+                <input type="text" id="keyword" name="keyword" th:value="${keyword}"
+                       placeholder="파일명으로 검색..."
+                       class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+
+            <!-- 상태 필터 -->
+            <div class="w-40">
+                <label for="status" class="block text-sm font-medium text-gray-700 mb-1">상태</label>
+                <select id="status" name="status"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="">전체</option>
+                    <option value="UPLOADED" th:selected="${status == 'UPLOADED'}">업로드됨</option>
+                    <option value="PROCESSING" th:selected="${status == 'PROCESSING'}">처리중</option>
+                    <option value="THUMBNAIL_CREATED" th:selected="${status == 'THUMBNAIL_CREATED'}">썸네일 생성</option>
+                    <option value="CONVERTED" th:selected="${status == 'CONVERTED'}">변환완료</option>
+                    <option value="COMPLETED" th:selected="${status == 'COMPLETED'}">완료</option>
+                    <option value="ERROR" th:selected="${status == 'ERROR'}">오류</option>
+                </select>
+            </div>
+
+            <!-- 페이지 크기 -->
+            <div class="w-28">
+                <label for="size" class="block text-sm font-medium text-gray-700 mb-1">표시 개수</label>
+                <select id="size" name="size"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <option value="12" th:selected="${size == 12}">12개</option>
+                    <option value="24" th:selected="${size == 24}">24개</option>
+                    <option value="48" th:selected="${size == 48}">48개</option>
+                </select>
+            </div>
+
+            <!-- 버튼 -->
+            <div class="flex gap-2">
+                <button type="submit"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    검색
+                </button>
+                <a th:href="@{/admin/video}"
+                   class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                    초기화
+                </a>
+            </div>
+        </form>
     </div>
 
     <!-- Empty State -->
@@ -34,7 +89,8 @@
                   d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
         </svg>
         <h3 class="mt-2 text-sm font-medium text-gray-900">비디오가 없습니다</h3>
-        <p class="mt-1 text-sm text-gray-500">새 비디오를 업로드해보세요.</p>
+        <p class="mt-1 text-sm text-gray-500" th:if="${keyword != null || status != null}">검색 조건에 맞는 비디오가 없습니다.</p>
+        <p class="mt-1 text-sm text-gray-500" th:unless="${keyword != null || status != null}">새 비디오를 업로드해보세요.</p>
         <div class="mt-6">
             <a th:href="@{/admin/video/create}" class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
                 <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,6 +153,82 @@
                 </div>
             </div>
         </a>
+    </div>
+
+    <!-- 페이지네이션 -->
+    <nav th:if="${totalPages > 1}" class="mt-8 flex items-center justify-between border-t border-gray-200 px-4 sm:px-0 dark:border-white/10"
+         th:with="startPage=${currentPage - 2 < 0 ? 0 : currentPage - 2},
+                  endPage=${currentPage + 2 > totalPages - 1 ? totalPages - 1 : currentPage + 2}">
+
+        <!-- Previous -->
+        <div class="-mt-px flex w-0 flex-1">
+            <a th:href="@{/admin/video(page=${currentPage - 1}, size=${size}, keyword=${keyword}, status=${status})}"
+               th:classappend="${!hasPrevious} ? 'pointer-events-none opacity-50' : ''"
+               class="inline-flex items-center border-t-2 border-transparent pt-4 pr-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200">
+                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="mr-3 size-5 text-gray-400 dark:text-gray-500">
+                    <path d="M18 10a.75.75 0 0 1-.75.75H4.66l2.1 1.95a.75.75 0 1 1-1.02 1.1l-3.5-3.25a.75.75 0 0 1 0-1.1l3.5-3.25a.75.75 0 1 1 1.02 1.1l-2.1 1.95h12.59A.75.75 0 0 1 18 10Z" clip-rule="evenodd" fill-rule="evenodd" />
+                </svg>
+                이전
+            </a>
+        </div>
+
+        <!-- 페이지 번호 -->
+        <div class="hidden md:-mt-px md:flex">
+            <!-- 첫 페이지 (현재 페이지가 3 이상일 때) -->
+            <a th:if="${startPage > 0}"
+               th:href="@{/admin/video(page=0, size=${size}, keyword=${keyword}, status=${status})}"
+               class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200">
+                1
+            </a>
+
+            <!-- 첫 페이지와 간격이 있으면 ... -->
+            <span th:if="${startPage > 1}" class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 dark:text-gray-400">...</span>
+
+            <!-- 페이지 번호들 -->
+            <th:block th:each="pageNum : ${#numbers.sequence(startPage, endPage)}">
+                <!-- 현재 페이지 -->
+                <a th:if="${pageNum == currentPage}"
+                   th:href="@{/admin/video(page=${pageNum}, size=${size}, keyword=${keyword}, status=${status})}"
+                   th:text="${pageNum + 1}"
+                   aria-current="page"
+                   class="inline-flex items-center border-t-2 border-indigo-500 px-4 pt-4 text-sm font-medium text-indigo-600 dark:border-indigo-400 dark:text-indigo-400">
+                </a>
+                <!-- 다른 페이지 -->
+                <a th:unless="${pageNum == currentPage}"
+                   th:href="@{/admin/video(page=${pageNum}, size=${size}, keyword=${keyword}, status=${status})}"
+                   th:text="${pageNum + 1}"
+                   class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200">
+                </a>
+            </th:block>
+
+            <!-- 마지막 페이지와 간격이 있으면 ... -->
+            <span th:if="${endPage < totalPages - 2}" class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 dark:text-gray-400">...</span>
+
+            <!-- 마지막 페이지 (현재 페이지가 끝에서 3 이상 떨어져 있을 때) -->
+            <a th:if="${endPage < totalPages - 1}"
+               th:href="@{/admin/video(page=${totalPages - 1}, size=${size}, keyword=${keyword}, status=${status})}"
+               th:text="${totalPages}"
+               class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200">
+            </a>
+        </div>
+
+        <!-- Next -->
+        <div class="-mt-px flex w-0 flex-1 justify-end">
+            <a th:href="@{/admin/video(page=${currentPage + 1}, size=${size}, keyword=${keyword}, status=${status})}"
+               th:classappend="${!hasNext} ? 'pointer-events-none opacity-50' : ''"
+               class="inline-flex items-center border-t-2 border-transparent pt-4 pl-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700 dark:text-gray-400 dark:hover:border-white/20 dark:hover:text-gray-200">
+                다음
+                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="ml-3 size-5 text-gray-400 dark:text-gray-500">
+                    <path d="M2 10a.75.75 0 0 1 .75-.75h12.59l-2.1-1.95a.75.75 0 1 1 1.02-1.1l3.5 3.25a.75.75 0 0 1 0 1.1l-3.5 3.25a.75.75 0 1 1-1.02-1.1l2.1-1.95H2.75A.75.75 0 0 1 2 10Z" clip-rule="evenodd" fill-rule="evenodd" />
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 페이지 정보 -->
+    <div th:if="${totalPages > 0}" class="mt-4 text-center text-sm text-gray-500">
+        <span th:text="${currentPage + 1}">1</span> / <span th:text="${totalPages}">1</span> 페이지
+        (총 <span th:text="${totalElements}">0</span>개)
     </div>
 
 </main>
